@@ -1,8 +1,9 @@
 import React from 'react';
 const Option = (props) => (
-    <div>
-        {props.optionText}
-        <button onClick={(e) => {
+    <div className="option">
+       <p className="option_text">{props.optionText}</p>
+        <button className="button button--link"
+        onClick={(e) => {
             props.handleRemove(props.optionText);
         }}
         >
@@ -11,3 +12,4 @@ const Option = (props) => (
        </button>
     </div>
 );
+export default Option;

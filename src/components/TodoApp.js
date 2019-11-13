@@ -1,14 +1,26 @@
+import React from 'react';
+import AddOption from './AddOption';
+import Action from './Action';
+import Header from './Header';
+import Options from './Options';
+import OptionModal from './OptionModal';
 
-class ToDoApp extends React.Component{
+class TodoApp extends React.Component{
     constructor(props){
         super(props);
         this.handleDeleteOptions =this.handleDeleteOptions.bind(this);
         this.handlePick = this.handlePick.bind(this);
         this.handleData = this.handleData.bind(this);
         this.handleDeleteOption = this.handleDeleteOption.bind(this);
+        this.handleClearSelectedOption =this.handleClearSelectedOption.bind(this);
+       
         this.state = {
-            options:['Thing1','Thing2', 'Thing3']
+            options:[],
+            selectedOption: null
         }
+    }
+    handleClearSelectedOption(){
+        this.setState(() => ({ selectedOption: null }));
     }
     handleDeleteOptions(){
         this.setState(() => {
@@ -23,13 +35,15 @@ class ToDoApp extends React.Component{
                 options: prevState.options.filter((option) =>{
                     return optionToRemove !== option;
                 })
-            };
-        });
+            }
+        })
     }
     handlePick() {
         const randomNum = Math.floor(Math.random() * this.state.options.length);
         const option = this.state.options[randomNum];
-        alert(option);
+        this.setState(() => ({
+            selectedOption: option
+        }));
     }
  
     handleData(option) {
@@ -44,6 +58,7 @@ class ToDoApp extends React.Component{
             };
         });
     }
+    //life cycle methods
     componentDidMount(){
         try {
             const json = localStorage.getItem('options');
@@ -68,18 +83,30 @@ class ToDoApp extends React.Component{
         return(
         <div>
             <Header  title={title} subtitle={subtitle} />
-        <Action 
-        hasOptions={this.state.options.length > 0}
-        handlePick={this.handlePick}
+           <div className="container">
+         <Action 
+            hasOptions={this.state.options.length > 0}
+             handlePick={this.handlePick}
+        
         />
+        <div className="widget">
         <Options
             options = {this.state.options} 
             handleDeleteOptions={this.handleDeleteOptions}
             handleDeleteOption={this.handleDeleteOption}
      />
         <AddOption 
-            handleData={this.handleData} />
+            handleData={this.handleData} 
+            />
+            </div>
+            </div>
+            <OptionModal
+            selectedOption={this.state.selectedOption}
+            handleClearSelectedOption={this.handleClearSelectedOption}
+           />
         </div>
         );
     }
 }
+
+export default TodoApp;
